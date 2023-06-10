@@ -30,15 +30,14 @@ class Post(models.Model):
     image = models.ImageField(
         upload_to='posts/', null=True, blank=True,
         verbose_name='Картинка')
-    group = models.ForeignKey(Group, on_delete = models.SET_NULL,
-                              related_name = 'posts', blank = True, null = True,
-                              verbose_name = 'Группа',
-                              help_text = 'Группа, '
-                                          'к которой будет относиться пост'
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL,
+                              related_name='posts', blank=True, null=True,
+                              verbose_name='Группа',
+                              help_text='Группа, '
+                                        'к которой будет относиться пост'
                               )
 
     class Meta:
-        ordering = ['-pub_date']
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
 
