@@ -21,7 +21,7 @@ class PostSerializer(serializers.ModelSerializer):
     image = Base64ImageField(required=False, allow_null=True)
 
     class Meta:
-        fields = ('id', 'author', 'text', 'pub_date', 'image', 'group')
+        fields = '__all__'
         model = Post
 
 

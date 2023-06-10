@@ -22,7 +22,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     pagination_class = LimitOffsetPagination
-    permission_classes = [IsOwnerOrReadOnly, ]
+    permission_classes = (IsOwnerOrReadOnly, )
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -36,7 +36,7 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsOwnerOrReadOnly, ]
+    permission_classes = (IsOwnerOrReadOnly, )
 
     def perform_create(self, serializer):
         post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
@@ -49,7 +49,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class FollowViewSet(CreateListViewSet):
     serializer_class = FollowSerializer
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = (IsAuthenticated, )
     filter_backends = (filters.SearchFilter,)
     search_fields = ('following__username', 'user__username')
 
