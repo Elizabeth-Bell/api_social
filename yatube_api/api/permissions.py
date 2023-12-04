@@ -2,6 +2,9 @@ from rest_framework import permissions
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
+    """Пермишен изменения объекта только для автора и создания
+    объектов только для авторизованных авторов.
+    """
     message = 'Вы не можете изменять объекты, созданные другим '
     'пользователем!'
 

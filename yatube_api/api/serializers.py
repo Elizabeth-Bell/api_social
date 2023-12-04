@@ -7,6 +7,7 @@ from rest_framework.relations import SlugRelatedField
 
 
 class Base64ImageField(serializers.ImageField):
+    """Поле сериалайзера для кодирования/декодирования картинок."""
     def to_internal_value(self, data):
         if isinstance(data, str) and data.startswith('data:image'):
             format, imgstr = data.split(':base64,')
@@ -16,16 +17,18 @@ class Base64ImageField(serializers.ImageField):
 
 
 class PostSerializer(serializers.ModelSerializer):
+    """Сериалайзер для постов."""
     author = SlugRelatedField(slug_field='username', read_only=True,
                               default=serializers.CurrentUserDefault())
     image = Base64ImageField(required=False, allow_null=True)
 
     class Meta:
-        fields = '__all__'
+        fields = ('text', 'author', 'image', 'created', 'group')
         model = Post
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    """Сериалайзер для комментариев."""
     author = serializers.SlugRelatedField(
         read_only=True, slug_field='username',
         default=serializers.CurrentUserDefault()
@@ -38,6 +41,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
+    """Сериалайзер для групп."""
 
     class Meta:
         fields = ('id', 'title', 'slug', 'description')
@@ -45,6 +49,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
+    """Сериалайзер для подписок."""
     user = SlugRelatedField(slug_field='username', read_only=True,
                             default=serializers.CurrentUserDefault())
     following = SlugRelatedField(slug_field='username',

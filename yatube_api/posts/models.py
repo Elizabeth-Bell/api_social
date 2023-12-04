@@ -5,7 +5,17 @@ from django.db import models
 User = get_user_model()
 
 
+class CreatedModel(models.Model):
+    """Абстрактная модель. Добавляет дату создания."""
+    created = models.DateTimeField(verbose_name='Дата создания',
+                                   auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+
 class Group(models.Model):
+    """Модель группы."""
     title = models.CharField(verbose_name='Заголовок',
                              max_length=200)
     slug = models.SlugField(verbose_name='Слаг',
@@ -20,10 +30,10 @@ class Group(models.Model):
         return self.title
 
 
-class Post(models.Model):
+class Post(CreatedModel):
+    """Модель поста."""
     text = models.TextField(verbose_name='Текст поста',
                             help_text='Введите текст поста')
-    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='posts',
         verbose_name='Автор')
@@ -45,21 +55,24 @@ class Post(models.Model):
         return self.text[:15]
 
 
-class Comment(models.Model):
+class Comment(CreatedModel):
+    """Модель комментария."""
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='comments')
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='comments')
-    text = models.TextField()
-    created = models.DateTimeField(
-        'Дата добавления', auto_now_add=True, db_index=True)
+    text = models.TextField(verbose_name='Текст комментария')
 
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
+    def __str__(self):
+        return self.text[:15]
+
 
 class Follow(models.Model):
+    """Модель подписки."""
     user = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name='follower',
                              verbose_name='Кто подписывается')
@@ -70,3 +83,6 @@ class Follow(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+
+    def __str__(self):
+        return f'{self.user} {self.following}'
